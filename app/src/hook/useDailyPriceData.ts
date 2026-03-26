@@ -5,11 +5,13 @@ import { fetchDailyPricesFromTwse } from "../api/fetchDailyPricesFromTwse";
 export function useDailyPriceData() {
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(dayjs());
 
-    const [dailyPriceData, setDailyPriceData] = useState<any>(null);
+    const [dailyPriceData, setDailyPriceData] = useState<unknown>(null);
 
     const [loading, setLoading] = useState<boolean>(false);
 
     const [error, setError] = useState<string | null>(null);
+
+    const [isCompleted, setIsCompleted] = useState<boolean>(false);
 
     const handleChangeDate = (newValue: dayjs.Dayjs | null) => {
         if (newValue) {
@@ -20,6 +22,7 @@ export function useDailyPriceData() {
     const fetchDailyPriceData = async () => {
         setLoading(true);
         setError(null);
+        setIsCompleted(false);
 
         try {
             const dateString = selectedDate.format("YYYYMMDD");
@@ -31,7 +34,22 @@ export function useDailyPriceData() {
             setDailyPriceData(null);
         } finally {
             setLoading(false);
+            setIsCompleted(true);
         }
+    }
+
+    const downloadDailyPriceData = async () => {
+        if (!dailyPriceData) return;
+
+        const blob = new Blob([JSON.stringify(dailyPriceData, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `twse_daily_price_${selectedDate.format("YYYYMMDD")}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     }
 
     return {
@@ -42,5 +60,7 @@ export function useDailyPriceData() {
         fetchDailyPriceData,
         loading,
         error,
+        isCompleted,
+        downloadDailyPriceData,
     }
 }
