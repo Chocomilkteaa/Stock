@@ -1,9 +1,7 @@
 export async function fetchDailyPricesFromTwse(
-  year: string,
-  month: string,
-  day: string,
-): Promise<void> {
-  const url = `https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=${year}${month}${day}&type=ALLBUT0999&response=json`;
+  date: string,
+): Promise<any> {
+  const url = `https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=${date}&type=ALLBUT0999&response=json`;
 
   const response = await fetch(url);
   if (!response.ok) {

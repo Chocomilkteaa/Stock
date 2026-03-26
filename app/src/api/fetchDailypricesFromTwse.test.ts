@@ -28,7 +28,7 @@ describe("fetchDailypricesFromTwse", () => {
       json: async () => mockData,
     });
 
-    const result = await fetchDailyPricesFromTwse("2024", "01", "01");
+    const result = await fetchDailyPricesFromTwse("20240101");
 
     expect(globalThis.fetch).toHaveBeenCalledExactlyOnceWith(`https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20240101&type=ALLBUT0999&response=json`);
     expect(result).toEqual(mockData);
@@ -41,7 +41,7 @@ describe("fetchDailypricesFromTwse", () => {
       statusText: "Internal Server Error",
     });
 
-    await expect(fetchDailyPricesFromTwse("2024", "01", "01")).rejects.toThrow(
+    await expect(fetchDailyPricesFromTwse("20240101")).rejects.toThrow(
       "HTTP error! 500 Internal Server Error"
     );
   });
@@ -56,7 +56,7 @@ describe("fetchDailypricesFromTwse", () => {
       json: async () => mockData,
     });
 
-    await expect(fetchDailyPricesFromTwse("2024", "01", "01")).rejects.toThrow(
+    await expect(fetchDailyPricesFromTwse("20240101")).rejects.toThrow(
       "API error! ERROR"
     );
   });
