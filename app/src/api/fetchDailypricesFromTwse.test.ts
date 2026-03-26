@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { fetchDailyPricesFromTwse } from "./fetchDailyPricesFromTwse";
+import fetchDailyPricesFromTwse from "./fetchDailyPricesFromTwse";
 
 describe("fetchDailypricesFromTwse", () => {
   it("should fetch data", async () => {
