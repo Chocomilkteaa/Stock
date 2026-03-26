@@ -1,11 +1,11 @@
 import { useState } from "react";
 import dayjs from "dayjs";
-import { fetchDailyPricesFromTwse } from "../api/fetchDailyPricesFromTwse";
+import fetchDailyPricesFromTwse from "../api/fetchDailyPricesFromTwse";
 
-export function useDailyPriceData() {
+function useDailyPriceData() {
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(dayjs());
 
-    const [dailyPriceData, setDailyPriceData] = useState<unknown>(null);
+    const [dailyPriceData, setDailyPriceData] = useState<string>('');
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -28,10 +28,10 @@ export function useDailyPriceData() {
             const dateString = selectedDate.format("YYYYMMDD");
             const data = await fetchDailyPricesFromTwse(dateString)
 
-            setDailyPriceData(data);
+            setDailyPriceData(JSON.stringify(data, null, 2));
         } catch (error) {
             setError(error instanceof Error ? error.message : String(error));
-            setDailyPriceData(null);
+            setDailyPriceData('');
         } finally {
             setLoading(false);
             setIsCompleted(true);
@@ -41,7 +41,7 @@ export function useDailyPriceData() {
     const downloadDailyPriceData = async () => {
         if (!dailyPriceData) return;
 
-        const blob = new Blob([JSON.stringify(dailyPriceData, null, 2)], { type: "application/json" });
+        const blob = new Blob([dailyPriceData], { type: "application/json" });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
@@ -64,3 +64,5 @@ export function useDailyPriceData() {
         downloadDailyPriceData,
     }
 }
+
+export default useDailyPriceData;

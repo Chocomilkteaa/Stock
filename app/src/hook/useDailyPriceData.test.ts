@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { useDailyPriceData } from "./useDailyPriceData";
-import { fetchDailyPricesFromTwse } from "../api/fetchDailyPricesFromTwse";
+import useDailyPriceData from "./useDailyPriceData";
+import fetchDailyPricesFromTwse from "../api/fetchDailyPricesFromTwse";
 
 vi.mock("../api/fetchDailyPricesFromTwse", () => ({
-  fetchDailyPricesFromTwse: vi.fn(),
+  default: vi.fn(),
 }));
 
 describe("useDailyPriceData", () => {
@@ -12,7 +12,7 @@ describe("useDailyPriceData", () => {
     const { result } = renderHook(() => useDailyPriceData());
 
     expect(result.current.selectedDate).toBeDefined();
-    expect(result.current.dailyPriceData).toBeNull();
+    expect(result.current.dailyPriceData).toBe('');
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBeNull();
   });
@@ -41,7 +41,7 @@ describe("useDailyPriceData", () => {
       await result.current.fetchDailyPriceData();
     });
 
-    expect(result.current.dailyPriceData).toEqual(mockData);
+    expect(result.current.dailyPriceData).toEqual(JSON.stringify(mockData, null, 2));
     expect(result.current.error).toBeNull();
     expect(result.current.loading).toBe(false);
   });
@@ -57,7 +57,7 @@ describe("useDailyPriceData", () => {
       await result.current.fetchDailyPriceData();
     });
 
-    expect(result.current.dailyPriceData).toBeNull();
+    expect(result.current.dailyPriceData).toBe('');
     expect(result.current.error).toEqual(mockError.message);
     expect(result.current.loading).toBe(false);
   });
@@ -83,7 +83,7 @@ describe("useDailyPriceData", () => {
     const { result } = renderHook(() => useDailyPriceData());
 
     act(() => {
-      result.current.setDailyPriceData(mockData);
+      result.current.setDailyPriceData(JSON.stringify(mockData, null, 2));
     });
     act(() => {
       result.current.downloadDailyPriceData();
