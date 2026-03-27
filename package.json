@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "pnpm -F app build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "pnpm -F app test"
   },
   "keywords": [],
   "author": "",
