@@ -45,19 +45,4 @@ describe("fetchDailyPricesFromTwse", () => {
       "HTTP error! 500 Internal Server Error"
     );
   });
-
-  it("should throw if data.stat is not 'OK'", async () => {
-    const mockData = {
-      stat: "ERROR",
-    };
-
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => mockData,
-    });
-
-    await expect(fetchDailyPricesFromTwse("20240101")).rejects.toThrow(
-      "API error! ERROR"
-    );
-  });
 });

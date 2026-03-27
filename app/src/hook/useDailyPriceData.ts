@@ -1,6 +1,7 @@
 import { useState } from "react";
 import dayjs from "dayjs";
 import fetchDailyPricesFromTwse from "../api/fetchDailyPricesFromTwse";
+import parseDailyPricesFromTwse from "../util/parseDailyPricesFromTwse";
 
 function useDailyPriceData() {
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(dayjs());
@@ -19,7 +20,7 @@ function useDailyPriceData() {
         }
     }
 
-    const fetchDailyPriceData = async () => {
+    const getDailyPriceData = async () => {
         setLoading(true);
         setError(null);
         setIsCompleted(false);
@@ -27,8 +28,9 @@ function useDailyPriceData() {
         try {
             const dateString = selectedDate.format("YYYYMMDD");
             const data = await fetchDailyPricesFromTwse(dateString)
+            const parsedData = parseDailyPricesFromTwse(data);
 
-            setDailyPriceData(JSON.stringify(data, null, 2));
+            setDailyPriceData(JSON.stringify(parsedData, null, 2));
         } catch (error) {
             setError(error instanceof Error ? error.message : String(error));
             setDailyPriceData('');
@@ -57,7 +59,7 @@ function useDailyPriceData() {
         handleChangeDate,
         dailyPriceData,
         setDailyPriceData,
-        fetchDailyPriceData,
+        getDailyPriceData,
         loading,
         error,
         isCompleted,

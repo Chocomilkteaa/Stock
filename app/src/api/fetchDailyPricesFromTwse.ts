@@ -8,9 +8,6 @@ async function fetchDailyPricesFromTwse(
     throw new Error(`HTTP error! ${response.status} ${response.statusText}`);
   }
   const data = await response.json();
-  if (data.stat !== "OK") {
-    throw new Error(`API error! ${data.stat}`);
-  }
 
   return data;
 }

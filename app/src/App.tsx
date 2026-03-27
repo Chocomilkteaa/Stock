@@ -6,7 +6,7 @@ function App() {
     selectedDate,
     handleChangeDate,
     dailyPriceData,
-    fetchDailyPriceData,
+    getDailyPriceData,
     loading,
     error,
     isCompleted,
@@ -24,7 +24,7 @@ function App() {
       successMessage={`Daily Price Data for ${selectedDate.format("YYYY-MM-DD")} fetched successfully`}
       isCompleted={isCompleted}
       noDataMessage="No data available"
-      fetchData={fetchDailyPriceData}
+      fetchData={getDailyPriceData}
       downloadData={downloadDailyPriceData}
     />
   );
