@@ -1,5 +1,13 @@
+/**
+ * @vitest-environment node
+ */
 import { describe, expect, it, vi } from "vitest";
 import fetchDailyPricesFromTwse from "./fetchDailyPricesFromTwse";
+import fetchData from "./api.util";
+
+vi.mock("./api.util", () => ({
+  default: vi.fn(),
+}));
 
 describe("fetchDailyPricesFromTwse", () => {
   it("should fetch data", async () => {
@@ -23,26 +31,19 @@ describe("fetchDailyPricesFromTwse", () => {
       ],
     };
 
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => mockData,
-    });
+    vi.mocked(fetchData).mockResolvedValue(mockData);
 
     const result = await fetchDailyPricesFromTwse("20240101");
 
-    expect(globalThis.fetch).toHaveBeenCalledExactlyOnceWith(`https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20240101&type=ALLBUT0999&response=json`);
+    expect(fetchData).toHaveBeenCalledExactlyOnceWith(`https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=20240101&type=ALLBUT0999&response=json`);
     expect(result).toEqual(mockData);
   });
 
   it("should throw if response is not ok", async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: false,
-      status: 500,
-      statusText: "Internal Server Error",
-    });
+    vi.mocked(fetchData).mockRejectedValue(new Error("HTTP error: 500 Internal Server Error"));
 
     await expect(fetchDailyPricesFromTwse("20240101")).rejects.toThrow(
-      "TWSE HTTP error! 500 Internal Server Error"
+      "TWSE HTTP error: 500 Internal Server Error"
     );
   });
 });

@@ -1,15 +1,16 @@
+import fetchData from "./api.util";
+
 async function fetchDailyPricesFromTwse(
   date: string,
 ): Promise<unknown> {
   const url = `https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date=${date}&type=ALLBUT0999&response=json`;
 
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`TWSE HTTP error! ${response.status} ${response.statusText}`);
+  try {
+    return await fetchData(url);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(`TWSE ${errorMessage}`);
   }
-  const data = await response.json();
-
-  return data;
 }
 
 export default fetchDailyPricesFromTwse;
