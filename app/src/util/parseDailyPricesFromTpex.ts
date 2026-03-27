@@ -1,4 +1,4 @@
-const DailyPriceTableTitle = "上櫃股票行情"
+const DailyPriceTableTitle = "上櫃股票行情";
 
 function getTargetTable(
   data: object,
@@ -9,14 +9,16 @@ function getTargetTable(
   data: string[][];
 } {
   if (!("tables" in data) || !Array.isArray(data.tables)) {
-    throw new Error("TPEX API error! No tables available");
+    throw new Error("No tables available");
   }
 
-  const targetTable: {
-    title: string;
-    fields: string[];
-    data: string[][];
-  } | undefined = data.tables.find((table: unknown) => {
+  const targetTable:
+    | {
+        title: string;
+        fields: string[];
+        data: string[][];
+      }
+    | undefined = data.tables.find((table: unknown) => {
     if (!table || typeof table !== "object") return false;
     return (
       "title" in table &&
@@ -35,14 +37,16 @@ function getTargetTable(
   });
 
   if (!targetTable) {
-    throw new Error(`TPEX API error! No table found with title: ${targetTitle}`);
+    throw new Error(
+      `No table found with title: ${targetTitle}`,
+    );
   }
 
   return targetTable;
 }
 
 function normalizeCell(value: string | undefined): string {
-  return value ? value.replace(/<[^>]*>/g, '').trim() : "";
+  return value ? value.replace(/<[^>]*>/g, "").trim() : "";
 }
 
 function parseTableData(table: {
@@ -50,29 +54,38 @@ function parseTableData(table: {
   fields: string[];
   data: string[][];
 }): Array<Record<string, string>> {
-    const parsedData = table.data.map((row) => {
-        const record: Record<string, string> = {};
-        table.fields.forEach((field, index) => {
-            record[field] = normalizeCell(row[index]);
-        });
-        return record;
+  const parsedData = table.data.map((row) => {
+    const record: Record<string, string> = {};
+    table.fields.forEach((field, index) => {
+      record[field] = normalizeCell(row[index]);
     });
-    if (parsedData.length === 0) {
-        throw new Error("TPEX API error! No data rows available in the target table");
-    }
-    return parsedData;
+    return record;
+  });
+  if (parsedData.length === 0) {
+    throw new Error(
+      "No data rows available in the target table",
+    );
+  }
+  return parsedData;
 }
 
-function parseDailyPricesFromTpex(data: unknown, targetTableTitle: string = DailyPriceTableTitle): Array<Record<string, string>> {
-  if (!data || typeof data !== "object")
-    throw new Error("TPEX API error! No data available");
+function parseDailyPricesFromTpex(
+  data: unknown,
+  targetTableTitle: string = DailyPriceTableTitle,
+): Array<Record<string, string>> {
+  try {
+    if (!data || typeof data !== "object") throw new Error("No data available");
 
-  if ("stat" in data && data.stat !== "ok") {
-    throw new Error(`TPEX API error! Stat: ${data.stat}`);
+    if ("stat" in data && data.stat !== "ok") {
+      throw new Error(`Stat: ${data.stat}`);
+    }
+
+    const targetTable = getTargetTable(data, targetTableTitle);
+    return parseTableData(targetTable);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(`TPEX API error: ${errorMessage}`);
   }
-
-  const targetTable = getTargetTable(data, targetTableTitle);
-  return parseTableData(targetTable);
 }
 
 export default parseDailyPricesFromTpex;
