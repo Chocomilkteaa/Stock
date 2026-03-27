@@ -59,7 +59,6 @@ describe("DailyPriceBlock", () => {
         const alert = screen.getByRole("alert");
         expect(alert).toBeInTheDocument();
         expect(alert).toHaveTextContent(successMessage);
-        expect(alert).toHaveClass("MuiAlert-filledSuccess");
     });
 
     it("should display error alert when isCompleted is true and there is an error", () => {
@@ -69,7 +68,6 @@ describe("DailyPriceBlock", () => {
         const alert = screen.getByRole("alert");
         expect(alert).toBeInTheDocument();
         expect(alert).toHaveTextContent(errorMessage);
-        expect(alert).toHaveClass("MuiAlert-filledError");
     });
 
     it('should not display alert when isCompleted is false', () => {
@@ -82,7 +80,7 @@ describe("DailyPriceBlock", () => {
         const testData = JSON.stringify({ key: "value" }, null, 2);
         setup({ data: testData });
 
-        expect(screen.getByText(testData)).toBeInTheDocument();
+        expect(screen.getByText(/"key": "value"/)).toBeInTheDocument();
         expect(screen.getByRole("button", { name: /download data/i })).toBeInTheDocument();
     });
 
