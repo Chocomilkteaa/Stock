@@ -3,12 +3,22 @@ import { renderHook, act } from "@testing-library/react";
 import useDailyPriceData from "./useDailyPriceData";
 import fetchDailyPricesFromTwse from "../api/fetchDailyPricesFromTwse";
 import parseDailyPricesFromTwse from "../util/parseDailyPricesFromTwse";
+import fetchDailyPricesFromTpex from "../api/fetchDailyPricesFromTpex";
+import parseDailyPricesFromTpex from "../util/parseDailyPricesFromTpex";
 
 vi.mock("../api/fetchDailyPricesFromTwse", () => ({
   default: vi.fn(),
 }));
 
 vi.mock("../util/parseDailyPricesFromTwse", () => ({
+  default: vi.fn(),
+}));
+
+vi.mock("../api/fetchDailyPricesFromTpex", () => ({
+  default: vi.fn(),
+}));
+
+vi.mock("../util/parseDailyPricesFromTpex", () => ({
   default: vi.fn(),
 }));
 
@@ -40,6 +50,8 @@ describe("useDailyPriceData", () => {
 
     vi.mocked(fetchDailyPricesFromTwse).mockResolvedValue(mockData);
     vi.mocked(parseDailyPricesFromTwse).mockReturnValue([mockData]);
+    vi.mocked(fetchDailyPricesFromTpex).mockResolvedValue(mockData);
+    vi.mocked(parseDailyPricesFromTpex).mockReturnValue([mockData]);
 
     const { result } = renderHook(() => useDailyPriceData());
 
@@ -47,7 +59,7 @@ describe("useDailyPriceData", () => {
       await result.current.getDailyPriceData();
     });
 
-    expect(result.current.dailyPriceData).toEqual(JSON.stringify([mockData], null, 2));
+    expect(result.current.dailyPriceData).toEqual(JSON.stringify([mockData, mockData], null, 2));
     expect(result.current.error).toBeNull();
     expect(result.current.loading).toBe(false);
   });

@@ -2,6 +2,8 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import fetchDailyPricesFromTwse from "../api/fetchDailyPricesFromTwse";
 import parseDailyPricesFromTwse from "../util/parseDailyPricesFromTwse";
+import fetchDailyPricesFromTpex from "../api/fetchDailyPricesFromTpex";
+import parseDailyPricesFromTpex from "../util/parseDailyPricesFromTpex";
 
 function useDailyPriceData() {
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(dayjs());
@@ -26,11 +28,13 @@ function useDailyPriceData() {
         setIsCompleted(false);
 
         try {
-            const dateString = selectedDate.format("YYYYMMDD");
-            const data = await fetchDailyPricesFromTwse(dateString)
-            const parsedData = parseDailyPricesFromTwse(data);
+            const dataFromTwse = await fetchDailyPricesFromTwse(selectedDate.format("YYYYMMDD"))
+            const parsedDataFromTwse = parseDailyPricesFromTwse(dataFromTwse);
 
-            setDailyPriceData(JSON.stringify(parsedData, null, 2));
+            const dataFromTpex = await fetchDailyPricesFromTpex(selectedDate.format("YYYY-MM-DD"))
+            const parsedDataFromTpex = parseDailyPricesFromTpex(dataFromTpex);
+
+            setDailyPriceData(JSON.stringify(parsedDataFromTwse.concat(parsedDataFromTpex), null, 2));
         } catch (error) {
             setError(error instanceof Error ? error.message : String(error));
             setDailyPriceData('');
