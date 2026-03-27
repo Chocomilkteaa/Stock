@@ -30,7 +30,7 @@ describe("fetchDailyPricesFromTpex", () => {
 
     const result = await fetchDailyPricesFromTpex("2024-01-01");
 
-    expect(globalThis.fetch).toHaveBeenCalledExactlyOnceWith(`https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes?date=2024%2F01%2F01&id=&response=json`);
+    expect(globalThis.fetch).toHaveBeenCalledExactlyOnceWith(`/tpexApi/www/zh-tw/afterTrading/dailyQuotes?date=2024%2F01%2F01&id=&response=json`);
     expect(result).toEqual(mockData);
   });
 

@@ -11,6 +11,13 @@ export default defineConfig({
       usePolling: true,
       interval: 1000,
     },
+    proxy: {
+      "/tpexApi": {
+        target: "https://www.tpex.org.tw",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/tpexApi/, ""),
+      }
+    }
   },
   test: {
     environment: "jsdom",
