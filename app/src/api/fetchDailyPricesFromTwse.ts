@@ -5,7 +5,7 @@ async function fetchDailyPricesFromTwse(
 
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error(`HTTP error! ${response.status} ${response.statusText}`);
+    throw new Error(`TWSE HTTP error! ${response.status} ${response.statusText}`);
   }
   const data = await response.json();
 

@@ -42,7 +42,7 @@ describe("fetchDailyPricesFromTwse", () => {
     });
 
     await expect(fetchDailyPricesFromTwse("20240101")).rejects.toThrow(
-      "HTTP error! 500 Internal Server Error"
+      "TWSE HTTP error! 500 Internal Server Error"
     );
   });
 });

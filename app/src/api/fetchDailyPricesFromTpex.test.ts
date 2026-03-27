@@ -42,7 +42,7 @@ describe("fetchDailyPricesFromTpex", () => {
     });
 
     await expect(fetchDailyPricesFromTpex("2024-01-01")).rejects.toThrow(
-      "HTTP error! 500 Internal Server Error"
+      "TPEX HTTP error! 500 Internal Server Error"
     );
   });
 });

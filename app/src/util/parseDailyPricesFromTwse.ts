@@ -9,7 +9,7 @@ function getTargetTable(
   data: string[][];
 } {
   if (!("tables" in data) || !Array.isArray(data.tables)) {
-    throw new Error("API error! No tables available");
+    throw new Error("TWSE API error! No tables available");
   }
 
   const targetTable: {
@@ -35,7 +35,7 @@ function getTargetTable(
   });
 
   if (!targetTable) {
-    throw new Error(`API error! No table found with title: ${targetTitle}`);
+    throw new Error(`TWSE API error! No table found with title: ${targetTitle}`);
   }
 
   return targetTable;
@@ -62,10 +62,10 @@ function parseTableData(table: {
 
 function parseDailyPricesFromTwse(data: unknown, targetTableTitle: string = DailyPriceTableTitle): Array<Record<string, string>> {
   if (!data || typeof data !== "object")
-    throw new Error("API error! No data available");
+    throw new Error("TWSE API error! No data available");
 
   if ("stat" in data && data.stat !== "OK") {
-    throw new Error(`API error! Stat: ${data.stat}`);
+    throw new Error(`TWSE API error! Stat: ${data.stat}`);
   }
 
   const targetTable = getTargetTable(data, targetTableTitle);
