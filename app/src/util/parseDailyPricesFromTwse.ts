@@ -1,4 +1,4 @@
-const DailyPriceTableTitle = "每日收盤行情(全部(不含權證、牛熊證))"
+const DailyPriceTableTitle = "每日收盤行情"
 
 function getTargetTable(
   data: object,
