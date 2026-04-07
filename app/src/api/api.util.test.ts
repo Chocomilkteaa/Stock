@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import fetchData from "./api.util";
 
 describe("fetchData", () => {
-  it("should fetch data", async () => {
+  it("should fetch json data", async () => {
     const mockData = {
       stat: "ok",
       data: "test",
@@ -20,6 +20,20 @@ describe("fetchData", () => {
 
     expect(globalThis.fetch).toHaveBeenCalledExactlyOnceWith("mock-url");
     expect(result).toEqual(mockData);
+  });
+
+  it("should fetch text data", async () => {
+    const mockText = "test text";
+
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      text: async () => mockText,
+    });
+
+    const result = await fetchData("mock-url", "text");
+
+    expect(globalThis.fetch).toHaveBeenCalledExactlyOnceWith("mock-url");
+    expect(result).toEqual(mockText);
   });
 
   it("should throw if response is not ok", async () => {
