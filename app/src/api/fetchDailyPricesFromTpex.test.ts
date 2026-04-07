@@ -31,6 +31,7 @@ describe("fetchDailyPricesFromTpex", () => {
       ],
     };
 
+    // @ts-expect-error
     vi.mocked(fetchData).mockResolvedValue(mockData);
 
     const result = await fetchDailyPricesFromTpex("2024-01-01");

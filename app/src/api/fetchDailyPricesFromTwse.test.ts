@@ -31,6 +31,7 @@ describe("fetchDailyPricesFromTwse", () => {
       ],
     };
 
+    // @ts-expect-error
     vi.mocked(fetchData).mockResolvedValue(mockData);
 
     const result = await fetchDailyPricesFromTwse("20240101");
