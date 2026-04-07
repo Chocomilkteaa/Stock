@@ -1,7 +1,7 @@
 /**
  * @vitest-environment node
  */
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import fetchDailyPricesFromTwse from "./fetchDailyPricesFromTwse";
 import fetchData from "./api.util";
 
@@ -10,6 +10,10 @@ vi.mock("./api.util", () => ({
 }));
 
 describe("fetchDailyPricesFromTwse", () => {
+  beforeEach(() => {
+    vi.mocked(fetchData).mockReset();
+  })
+
   it("should fetch data", async () => {
     const mockData = {
       stat: "OK",
