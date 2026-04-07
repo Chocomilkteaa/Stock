@@ -1,3 +1,6 @@
+async function fetchData(url: string, type?: "json"): Promise<unknown>;
+async function fetchData(url: string, type: "text"): Promise<string>;
+
 async function fetchData(url: string, type: "json" | "text" = "json"): Promise<unknown> {
   const response = await fetch(url);
   if (!response.ok) {
@@ -9,4 +12,5 @@ async function fetchData(url: string, type: "json" | "text" = "json"): Promise<u
     return await response.text();
   }
 }
+
 export default fetchData;
