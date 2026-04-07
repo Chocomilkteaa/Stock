@@ -9,7 +9,7 @@ function getTargetTable(
   data: string[][];
 } {
   if (!("tables" in data) || !Array.isArray(data.tables)) {
-    throw new Error("TWSE API error! No tables available");
+    throw new Error("No tables available");
   }
 
   const targetTable: {
@@ -35,7 +35,7 @@ function getTargetTable(
   });
 
   if (!targetTable) {
-    throw new Error(`TWSE API error! No table found with title: ${targetTitle}`);
+    throw new Error(`No table found with title: ${targetTitle}`);
   }
 
   return targetTable;
@@ -50,26 +50,31 @@ function parseTableData(table: {
   fields: string[];
   data: string[][];
 }): Array<Record<string, string>> {
-    const parsedData = table.data.map((row) => {
-        const record: Record<string, string> = {};
-        table.fields.forEach((field, index) => {
-            record[field] = normalizeCell(row[index]);
-        });
-        return record;
+  const parsedData = table.data.map((row) => {
+    const record: Record<string, string> = {};
+    table.fields.forEach((field, index) => {
+      record[field] = normalizeCell(row[index]);
     });
-    return parsedData;
+    return record;
+  });
+  return parsedData;
 }
 
 function parseDailyPricesFromTwse(data: unknown, targetTableTitle: string = DailyPriceTableTitle): Array<Record<string, string>> {
-  if (!data || typeof data !== "object")
-    throw new Error("TWSE API error! No data available");
+  try {
+    if (!data || typeof data !== "object")
+      throw new Error("No data available");
 
-  if ("stat" in data && data.stat !== "OK") {
-    throw new Error(`TWSE API error! Stat: ${data.stat}`);
+    if ("stat" in data && data.stat !== "OK") {
+      throw new Error(`Stat: ${data.stat}`);
+    }
+
+    const targetTable = getTargetTable(data, targetTableTitle);
+    return parseTableData(targetTable);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(`TWSE API error: ${errorMessage}`);
   }
-
-  const targetTable = getTargetTable(data, targetTableTitle);
-  return parseTableData(targetTable);
 }
 
 export default parseDailyPricesFromTwse;

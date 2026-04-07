@@ -61,7 +61,7 @@ describe("parseDailyPricesFromTwse", () => {
 
     expect(() =>
       parseDailyPricesFromTwse(mockData, "non-existent title"),
-    ).toThrow("API error! No table found with title: non-existent title");
+    ).toThrow("TWSE API error: No table found with title: non-existent title");
   });
 
   it("should throw if tables is not an array", () => {
@@ -72,7 +72,7 @@ describe("parseDailyPricesFromTwse", () => {
 
     expect(() =>
       parseDailyPricesFromTwse(mockData, "mock title"),
-    ).toThrow("API error! No tables available");
+    ).toThrow("TWSE API error: No tables available");
   })
 
   it("should throw if stat is not OK", () => {
@@ -82,16 +82,16 @@ describe("parseDailyPricesFromTwse", () => {
     };
 
     expect(() => parseDailyPricesFromTwse(mockData, "mock title")).toThrow(
-      "API error! Stat: ERROR",
+      "TWSE API error: Stat: ERROR",
     );
   });
 
   it("should throw if data is not an object", () => {
     expect(() => parseDailyPricesFromTwse(null, "mock title")).toThrow(
-      "API error! No data available",
+      "TWSE API error: No data available",
     );
     expect(() =>
       parseDailyPricesFromTwse("invalid data", "mock title"),
-    ).toThrow("API error! No data available");
+    ).toThrow("TWSE API error: No data available");
   });
 });
