@@ -85,10 +85,11 @@ describe("useDailyPriceData", () => {
   });
 
   it("should create a downloadable file when downloadDailyPriceData is called", async () => {
-    const mockData = {
+    const mockData = [{
       date: "2023-01-01",
       data: "test",
-    };
+    }];
+    const csvContent = "date,data\n\"2023-01-01\",\"test\"";
     const mockUrl = "mock-url";
 
     const createObjectURLMock = vi.fn((blob) => `${mockUrl}-${blob.size}`);
@@ -113,14 +114,14 @@ describe("useDailyPriceData", () => {
 
     const blobCall = createObjectURLMock.mock.calls[0][0];
     expect(blobCall).toBeInstanceOf(Blob);
-    expect(blobCall.type).toBe("application/json");
+    expect(blobCall.type).toBe("text/csv;charset=utf-8");
     const blobText = await blobCall.text();
-    expect(JSON.parse(blobText)).toEqual(mockData);
+    expect(blobText).toBe(csvContent);
 
     const lastCreatedElement = linkSpy.mock.results.find(
       (res) => res.value.tagName === "A",
     )?.value;
-    const expectedFileName = `daily_price_${result.current.selectedDate.format("YYYYMMDD")}.json`;
+    const expectedFileName = `daily_price_${result.current.selectedDate.format("YYYYMMDD")}.csv`;
     expect(lastCreatedElement.download).toBe(expectedFileName);
 
     expect(clickSpy).toHaveBeenCalled();

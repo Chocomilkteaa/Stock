@@ -51,11 +51,20 @@ function useDailyPriceData() {
     const downloadDailyPriceData = async () => {
         if (!dailyPriceData) return;
 
-        const blob = new Blob([dailyPriceData], { type: "application/json" });
+        const parsedData = JSON.parse(dailyPriceData);
+
+        const headers = Object.keys(parsedData[0]);
+        const headerRow = headers.join(",") + "\n";
+        const dataRows = parsedData.map((row: Record<string, string>) =>
+            headers.map((header) => JSON.stringify(row[header])).join(",")
+        ).join("\n");
+        const csvContent = headerRow + dataRows;
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `daily_price_${selectedDate.format("YYYYMMDD")}.json`;
+        link.download = `daily_price_${selectedDate.format("YYYYMMDD")}.csv`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
