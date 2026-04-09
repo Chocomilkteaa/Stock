@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import useDailyPriceData from "./useDailyPriceData";
 import fetchDailyPricesFromTwse from "../api/fetchDailyPricesFromTwse";
@@ -23,6 +23,10 @@ vi.mock("../util/parseDailyPricesFromTpex", () => ({
 }));
 
 describe("useDailyPriceData", () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("should initialize with default values", () => {
     const { result } = renderHook(() => useDailyPriceData());
 
@@ -96,7 +100,7 @@ describe("useDailyPriceData", () => {
     const linkSpy = vi.spyOn(document, "createElement")
     const clickSpy = vi
       .spyOn(HTMLAnchorElement.prototype, "click")
-      .mockImplementation(() => {});
+      .mockImplementation(() => { });
 
     const { result } = renderHook(() => useDailyPriceData());
 
