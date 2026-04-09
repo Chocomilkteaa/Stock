@@ -89,7 +89,7 @@ describe("useDailyPriceData", () => {
       date: "2023-01-01",
       data: "test",
     }];
-    const csvContent = "date,data\n\"2023-01-01\",\"test\"";
+    const csvContent = "date,data\n2023-01-01,test";
     const mockUrl = "mock-url";
 
     const createObjectURLMock = vi.fn((blob) => `${mockUrl}-${blob.size}`);

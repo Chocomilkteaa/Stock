@@ -56,7 +56,7 @@ function useDailyPriceData() {
         const headers = Object.keys(parsedData[0]);
         const headerRow = headers.join(",") + "\n";
         const dataRows = parsedData.map((row: Record<string, string>) =>
-            headers.map((header) => JSON.stringify(row[header])).join(",")
+            headers.map((header) => row[header]).join(",")
         ).join("\n");
         const csvContent = headerRow + dataRows;
 
