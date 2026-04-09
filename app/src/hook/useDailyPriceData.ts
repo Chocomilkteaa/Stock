@@ -28,10 +28,14 @@ function useDailyPriceData() {
         setIsCompleted(false);
 
         try {
-            const dataFromTwse = await fetchDailyPricesFromTwse(selectedDate.format("YYYYMMDD"))
-            const parsedDataFromTwse = parseDailyPricesFromTwse(dataFromTwse);
+            const twseDate = selectedDate.format("YYYYMMDD");
+            const tpexDate = selectedDate.format("YYYY-MM-DD");
+            const [dataFromTwse, dataFromTpex] = await Promise.all([
+                fetchDailyPricesFromTwse(twseDate),
+                fetchDailyPricesFromTpex(tpexDate),
+            ]);
 
-            const dataFromTpex = await fetchDailyPricesFromTpex(selectedDate.format("YYYY-MM-DD"))
+            const parsedDataFromTwse = parseDailyPricesFromTwse(dataFromTwse);
             const parsedDataFromTpex = parseDailyPricesFromTpex(dataFromTpex);
 
             setDailyPriceData(JSON.stringify(parsedDataFromTwse.concat(parsedDataFromTpex), null, 2));
