@@ -3,10 +3,11 @@ import parseDailyPricesFromTpex, { DailyPriceTargetFields } from "./parseDailyPr
 
 describe("parseDailyPricesFromTpex", () => {
   it("should parse the target table into array of objects with target fields", () => {
-    const expectedResult = DailyPriceTargetFields.reduce((acc, field, index) => {
-      acc[field] = `value${index + 1}`;
+    const mockValue = DailyPriceTargetFields.reduce((acc, _field, index) => {
+      const value = index < 2 ? `<p>value${index + 1}</p>` : `value${index + 1}`;
+      acc.push(value);
       return acc;
-    }, {} as Record<string, string>);
+    }, [] as string[]);
     
     const mockData = {
       stat: "ok",
@@ -14,14 +15,17 @@ describe("parseDailyPricesFromTpex", () => {
         {
           title: "mock title",
           fields: DailyPriceTargetFields.concat(["field1", "field2"]),
-          data: [Object.values(expectedResult).concat(["value1", "<p>value2</p>"])],
+          data: [mockValue.concat(["value1", "<p>value2</p>"])],
         },
       ],
     };
 
     const result = parseDailyPricesFromTpex(mockData, "mock title");
 
-    
+    const expectedResult = DailyPriceTargetFields.reduce((acc, field, index) => {
+      acc[field] = `value${index + 1}`;
+      return acc;
+    }, {} as Record<string, string>);
     expect(result).toEqual([expectedResult]);
   });
 
