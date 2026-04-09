@@ -1,27 +1,32 @@
 import { describe, expect, it } from "vitest";
-import parseDailyPricesFromTwse from "./parseDailyPricesFromTwse";
+import parseDailyPricesFromTwse, { DailyPriceTargetFields } from "./parseDailyPricesFromTwse";
 
 describe("parseDailyPricesFromTwse", () => {
-  it("should parse the target table into array of objects", () => {
+  it("should parse the target table into array of objects with target fields", () => {
+    const mockValue = DailyPriceTargetFields.reduce((acc, _field, index) => {
+      const value = index < 2 ? `<p>value${index + 1}</p>` : `value${index + 1}`;
+      acc.push(value);
+      return acc;
+    }, [] as string[]);
+
     const mockData = {
       stat: "OK",
       tables: [
         {
           title: "mock title",
-          fields: ["field1", "field2"],
-          data: [["value1", "<p>value2</p>"]],
+          fields: DailyPriceTargetFields.concat(["field1", "field2"]),
+          data: [mockValue.concat(["value1", "<p>value2</p>"])],
         },
       ],
     };
 
     const result = parseDailyPricesFromTwse(mockData, "mock title");
 
-    expect(result).toEqual([
-      {
-        field1: "value1",
-        field2: "value2",
-      },
-    ]);
+    const expectedResult = DailyPriceTargetFields.reduce((acc, field, index) => {
+      acc[field] = `value${index + 1}`;
+      return acc;
+    }, {} as Record<string, string>);
+    expect(result).toEqual([expectedResult]);
   });
 
   it("should fill missing values with empty strings", () => {
@@ -30,7 +35,7 @@ describe("parseDailyPricesFromTwse", () => {
       tables: [
         {
           title: "mock title",
-          fields: ["field1", "field2", "field3"],
+          fields: DailyPriceTargetFields.concat(["field1", "field2"]),
           data: [["value1", "<p>value2</p>"]],
         },
       ],
@@ -38,13 +43,11 @@ describe("parseDailyPricesFromTwse", () => {
 
     const result = parseDailyPricesFromTwse(mockData, "mock title");
 
-    expect(result).toEqual([
-      {
-        field1: "value1",
-        field2: "value2",
-        field3: "",
-      },
-    ]);
+    const expectedResult = DailyPriceTargetFields.reduce((acc, field, index) => {
+      acc[field] = index < 2 ? `value${index + 1}` : "";
+      return acc;
+    }, {} as Record<string, string>);
+    expect(result).toEqual([expectedResult]);
   });
 
   it("should throw if target table is not found", () => {

@@ -1,4 +1,13 @@
 const DailyPriceTableTitle = "每日收盤行情"
+const DailyPriceTargetFields = [
+  "證券代號",
+  "證券名稱",
+  "成交股數",
+  "開盤價",
+  "最高價",
+  "最低價",
+  "收盤價",
+];
 
 function getTargetTable(
   data: object,
@@ -53,7 +62,9 @@ function parseTableData(table: {
   const parsedData = table.data.map((row) => {
     const record: Record<string, string> = {};
     table.fields.forEach((field, index) => {
-      record[field] = normalizeCell(row[index]);
+      if (DailyPriceTargetFields.includes(field)) {
+        record[field] = normalizeCell(row[index]);
+      }
     });
     return record;
   });
@@ -78,3 +89,4 @@ function parseDailyPricesFromTwse(data: unknown, targetTableTitle: string = Dail
 }
 
 export default parseDailyPricesFromTwse;
+export { DailyPriceTargetFields }
