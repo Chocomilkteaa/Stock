@@ -51,7 +51,7 @@ function getTargetTable(
 }
 
 function normalizeCell(value: string | undefined): string {
-  return value ? value.replace(/<[^>]*>/g, '').trim() : "";
+  return value ? value.replace(/<[^>]*>/g, "").replace(/,/g, "").trim() : "";
 }
 
 function parseTableData(table: {

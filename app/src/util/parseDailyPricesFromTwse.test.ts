@@ -4,7 +4,7 @@ import parseDailyPricesFromTwse, { DailyPriceTargetFields } from "./parseDailyPr
 describe("parseDailyPricesFromTwse", () => {
   it("should parse the target table into array of objects with target fields", () => {
     const mockValue = DailyPriceTargetFields.reduce((acc, _field, index) => {
-      const value = index < 2 ? `<p>value${index + 1}</p>` : `value${index + 1}`;
+      const value = index < 2 ? `<p>value${index + 1},000.0</p>` : `value${index + 1}`;
       acc.push(value);
       return acc;
     }, [] as string[]);
@@ -23,7 +23,7 @@ describe("parseDailyPricesFromTwse", () => {
     const result = parseDailyPricesFromTwse(mockData, "mock title");
 
     const expectedResult = DailyPriceTargetFields.reduce((acc, field, index) => {
-      acc[field] = `value${index + 1}`;
+      acc[field] = index < 2 ? `value${index + 1}000.0` : `value${index + 1}`;
       return acc;
     }, {} as Record<string, string>);
     expect(result).toEqual([expectedResult]);
