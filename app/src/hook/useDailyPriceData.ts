@@ -55,7 +55,7 @@ function useDailyPriceData() {
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `twse_daily_price_${selectedDate.format("YYYYMMDD")}.json`;
+        link.download = `daily_price_${selectedDate.format("YYYYMMDD")}.json`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

@@ -116,7 +116,7 @@ describe("useDailyPriceData", () => {
     const lastCreatedElement = linkSpy.mock.results.find(
       (res) => res.value.tagName === "A",
     )?.value;
-    const expectedFileName = `twse_daily_price_${result.current.selectedDate.format("YYYYMMDD")}.json`;
+    const expectedFileName = `daily_price_${result.current.selectedDate.format("YYYYMMDD")}.json`;
     expect(lastCreatedElement.download).toBe(expectedFileName);
 
     expect(clickSpy).toHaveBeenCalled();
