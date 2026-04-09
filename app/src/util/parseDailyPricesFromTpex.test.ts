@@ -1,27 +1,28 @@
 import { describe, expect, it } from "vitest";
-import parseDailyPricesFromTpex from "./parseDailyPricesFromTpex";
+import parseDailyPricesFromTpex, { DailyPriceTargetFields } from "./parseDailyPricesFromTpex";
 
 describe("parseDailyPricesFromTpex", () => {
-  it("should parse the target table into array of objects", () => {
+  it("should parse the target table into array of objects with target fields", () => {
+    const expectedResult = DailyPriceTargetFields.reduce((acc, field, index) => {
+      acc[field] = `value${index + 1}`;
+      return acc;
+    }, {} as Record<string, string>);
+    
     const mockData = {
       stat: "ok",
       tables: [
         {
           title: "mock title",
-          fields: ["field1", "field2"],
-          data: [["value1", "<p>value2</p>"]],
+          fields: DailyPriceTargetFields.concat(["field1", "field2"]),
+          data: [Object.values(expectedResult).concat(["value1", "<p>value2</p>"])],
         },
       ],
     };
 
     const result = parseDailyPricesFromTpex(mockData, "mock title");
 
-    expect(result).toEqual([
-      {
-        field1: "value1",
-        field2: "value2",
-      },
-    ]);
+    
+    expect(result).toEqual([expectedResult]);
   });
 
   it("should fill missing values with empty strings", () => {
@@ -30,7 +31,7 @@ describe("parseDailyPricesFromTpex", () => {
       tables: [
         {
           title: "mock title",
-          fields: ["field1", "field2", "field3"],
+          fields: DailyPriceTargetFields.concat(["field1", "field2"]),
           data: [["value1", "<p>value2</p>"]],
         },
       ],
@@ -38,13 +39,11 @@ describe("parseDailyPricesFromTpex", () => {
 
     const result = parseDailyPricesFromTpex(mockData, "mock title");
 
-    expect(result).toEqual([
-      {
-        field1: "value1",
-        field2: "value2",
-        field3: "",
-      },
-    ]);
+    const expectedResult = DailyPriceTargetFields.reduce((acc, field, index) => {
+      acc[field] = index < 2 ? `value${index + 1}` : "";
+      return acc;
+    }, {} as Record<string, string>);
+    expect(result).toEqual([expectedResult]);
   });
 
   it("should throw if parsed data is empty", () => {

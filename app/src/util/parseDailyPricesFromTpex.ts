@@ -1,4 +1,13 @@
 const DailyPriceTableTitle = "上櫃股票行情";
+const DailyPriceTargetFields = [
+  "代號",
+  "名稱",
+  "成交股數",
+  "開盤",
+  "最高",
+  "最低",
+  "收盤",
+];
 
 function getTargetTable(
   data: object,
@@ -14,27 +23,27 @@ function getTargetTable(
 
   const targetTable:
     | {
-        title: string;
-        fields: string[];
-        data: string[][];
-      }
+      title: string;
+      fields: string[];
+      data: string[][];
+    }
     | undefined = data.tables.find((table: unknown) => {
-    if (!table || typeof table !== "object") return false;
-    return (
-      "title" in table &&
-      typeof table.title === "string" &&
-      table.title.includes(targetTitle) &&
-      "fields" in table &&
-      Array.isArray(table.fields) &&
-      table.fields.every((field: unknown) => typeof field === "string") &&
-      "data" in table &&
-      Array.isArray(table.data) &&
-      table.data.every(
-        (row) =>
-          Array.isArray(row) && row.every((cell) => typeof cell === "string"),
-      )
-    );
-  });
+      if (!table || typeof table !== "object") return false;
+      return (
+        "title" in table &&
+        typeof table.title === "string" &&
+        table.title.includes(targetTitle) &&
+        "fields" in table &&
+        Array.isArray(table.fields) &&
+        table.fields.every((field: unknown) => typeof field === "string") &&
+        "data" in table &&
+        Array.isArray(table.data) &&
+        table.data.every(
+          (row) =>
+            Array.isArray(row) && row.every((cell) => typeof cell === "string"),
+        )
+      );
+    });
 
   if (!targetTable) {
     throw new Error(
@@ -57,7 +66,9 @@ function parseTableData(table: {
   const parsedData = table.data.map((row) => {
     const record: Record<string, string> = {};
     table.fields.forEach((field, index) => {
-      record[field] = normalizeCell(row[index]);
+      if (DailyPriceTargetFields.includes(field)) {
+        record[field] = normalizeCell(row[index]);
+      }
     });
     return record;
   });
@@ -89,3 +100,4 @@ function parseDailyPricesFromTpex(
 }
 
 export default parseDailyPricesFromTpex;
+export { DailyPriceTargetFields };
