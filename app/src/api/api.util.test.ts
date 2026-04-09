@@ -1,10 +1,14 @@
 /**
  * @vitest-environment node
  */
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import fetchData from "./api.util";
 
 describe("fetchData", () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("should fetch json data", async () => {
     const mockData = {
       stat: "ok",
