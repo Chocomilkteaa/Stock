@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import parseDailyPricesFromTpex, { DailyPriceTargetFields } from "./parseDailyPricesFromTpex";
+import { DailyPriceTargetFields as TwseDailyPriceTargetFields } from "./parseDailyPricesFromTwse";
 
 describe("parseDailyPricesFromTpex", () => {
   it("should parse the target table into array of objects with target fields", () => {
@@ -22,7 +23,7 @@ describe("parseDailyPricesFromTpex", () => {
 
     const result = parseDailyPricesFromTpex(mockData, "mock title");
 
-    const expectedResult = DailyPriceTargetFields.reduce((acc, field, index) => {
+    const expectedResult = TwseDailyPriceTargetFields.reduce((acc, field, index) => {
       acc[field] = `value${index + 1}`;
       return acc;
     }, {} as Record<string, string>);
@@ -43,7 +44,7 @@ describe("parseDailyPricesFromTpex", () => {
 
     const result = parseDailyPricesFromTpex(mockData, "mock title");
 
-    const expectedResult = DailyPriceTargetFields.reduce((acc, field, index) => {
+    const expectedResult = TwseDailyPriceTargetFields.reduce((acc, field, index) => {
       acc[field] = index < 2 ? `value${index + 1}` : "";
       return acc;
     }, {} as Record<string, string>);

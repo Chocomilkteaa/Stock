@@ -1,3 +1,5 @@
+import { DailyPriceTargetFields as TwseDailyPriceTargetFields } from "./parseDailyPricesFromTwse";
+
 const DailyPriceTableTitle = "上櫃股票行情";
 const DailyPriceTargetFields = [
   "代號",
@@ -8,6 +10,9 @@ const DailyPriceTargetFields = [
   "最低",
   "收盤",
 ];
+const DailyPriceTargetFieldMap = Object.fromEntries(
+  DailyPriceTargetFields.map((field, index) => [field, TwseDailyPriceTargetFields[index]]),
+) 
 
 function getTargetTable(
   data: object,
@@ -67,7 +72,7 @@ function parseTableData(table: {
     const record: Record<string, string> = {};
     table.fields.forEach((field, index) => {
       if (DailyPriceTargetFields.includes(field)) {
-        record[field] = normalizeCell(row[index]);
+        record[DailyPriceTargetFieldMap[field]] = normalizeCell(row[index]);
       }
     });
     return record;
