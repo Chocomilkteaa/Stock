@@ -15,7 +15,7 @@ function App() {
 
   return (
     <DailyPriceBlock
-      title="TWSE Daily Price Data"
+      title="SII + OTC Daily Price Data"
       selectedDate={selectedDate}
       handleChangeDate={handleChangeDate}
       data={dailyPriceData}
