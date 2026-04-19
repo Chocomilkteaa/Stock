@@ -24,7 +24,7 @@ vi.mock("../util/parseDailyPricesFromTpex", () => ({
 
 describe("useDailyPriceData", () => {
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   it("should initialize with default values", () => {
@@ -95,8 +95,8 @@ describe("useDailyPriceData", () => {
     const createObjectURLMock = vi.fn((blob) => `${mockUrl}-${blob.size}`);
     const revokeObjectURLMock = vi.fn();
 
-    globalThis.URL.createObjectURL = createObjectURLMock;
-    globalThis.URL.revokeObjectURL = revokeObjectURLMock;
+    vi.spyOn(globalThis.URL, "createObjectURL").mockImplementation(createObjectURLMock);
+    vi.spyOn(globalThis.URL, "revokeObjectURL").mockImplementation(revokeObjectURLMock);
 
     const linkSpy = vi.spyOn(document, "createElement")
     const clickSpy = vi
@@ -125,8 +125,5 @@ describe("useDailyPriceData", () => {
     expect(lastCreatedElement.download).toBe(expectedFileName);
 
     expect(clickSpy).toHaveBeenCalled();
-
-    linkSpy.mockRestore();
-    clickSpy.mockRestore();
   });
 });
