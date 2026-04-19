@@ -6,7 +6,7 @@ import fetchData from "./api.util";
 
 describe("fetchData", () => {
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   it("should fetch json data", async () => {
@@ -15,7 +15,8 @@ describe("fetchData", () => {
       data: "test",
     };
 
-    globalThis.fetch = vi.fn().mockResolvedValue({
+    // @ts-expect-error - Mocking global fetch
+    vi.spyOn(globalThis, "fetch").mockResolvedValue({
       ok: true,
       json: async () => mockData,
     });
@@ -29,7 +30,8 @@ describe("fetchData", () => {
   it("should fetch text data", async () => {
     const mockText = "test text";
 
-    globalThis.fetch = vi.fn().mockResolvedValue({
+    // @ts-expect-error - Mocking global fetch
+    vi.spyOn(globalThis, "fetch").mockResolvedValue({
       ok: true,
       text: async () => mockText,
     });
@@ -41,7 +43,8 @@ describe("fetchData", () => {
   });
 
   it("should throw if response is not ok", async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue({
+    // @ts-expect-error - Mocking global fetch
+    vi.spyOn(globalThis, "fetch").mockResolvedValue({
       ok: false,
       status: 500,
       statusText: "Internal Server Error",
