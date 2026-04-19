@@ -75,6 +75,9 @@ describe("useDailyPriceData", () => {
 
     const { result } = renderHook(() => useDailyPriceData());
 
+    act(() => {
+      result.current.setDailyPriceData("should be reset on error");
+    })
     await act(async () => {
       await result.current.getDailyPriceData();
     });

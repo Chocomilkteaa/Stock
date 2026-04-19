@@ -26,6 +26,7 @@ function useDailyPriceData() {
         setLoading(true);
         setError(null);
         setIsCompleted(false);
+        setDailyPriceData('');
 
         try {
             const twseDate = selectedDate.format("YYYYMMDD");
