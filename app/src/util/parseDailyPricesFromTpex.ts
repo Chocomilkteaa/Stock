@@ -96,16 +96,16 @@ function parseDailyPricesFromTpex(
   data: unknown,
   targetTableTitle: string = DailyPriceTableTitle,
 ): Array<Record<string, string>> {
-  const missingTwseFields = Object.values(DailyPriceTargetFieldMap).filter(
-    (field) => !TwseDailyPriceTargetFields.includes(field),
-  );
-  if (missingTwseFields.length > 0) {
-    throw new Error(
-      `Unexpected TWSE daily price fields: missing ${missingTwseFields.join(", ")}`,
-    );
-  }
-  
   try {
+    const missingTwseFields = Object.values(DailyPriceTargetFieldMap).filter(
+      (field) => !TwseDailyPriceTargetFields.includes(field),
+    );
+    if (missingTwseFields.length > 0) {
+      throw new Error(
+        `Unexpected TWSE daily price fields: missing ${missingTwseFields.join(", ")}`,
+      );
+    }
+
     if (!data || typeof data !== "object") throw new Error("No data available");
 
     if ("stat" in data && data.stat !== "ok") {
