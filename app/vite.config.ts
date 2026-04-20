@@ -40,7 +40,7 @@ export default defineConfig({
     },
     experimental: {
       importDurations: {
-        print: true,
+        print: process.env.VITEST_PRINT_IMPORT_DURATIONS === "true",
         thresholds: { warn: 50 },
       },
     },
