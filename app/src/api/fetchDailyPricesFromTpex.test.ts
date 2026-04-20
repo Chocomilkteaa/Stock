@@ -51,4 +51,10 @@ describe("fetchDailyPricesFromTpex", () => {
       "TPEX HTTP error: 500 Internal Server Error"
     );
   });
+
+  it("should throw if date format is invalid", async () => {
+    await expect(fetchDailyPricesFromTpex("01-01-2024")).rejects.toThrow(
+      'TPEX Request Error: Invalid date format. Expected "YYYY-MM-DD".'
+    );
+  });
 });
