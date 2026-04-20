@@ -50,6 +50,8 @@ function useDailyPriceData() {
     }
 
     const downloadDailyPriceData = async () => {
+        setError(null);
+        
         const parseData = (data: string) => {
             try {
                 return JSON.parse(data);
