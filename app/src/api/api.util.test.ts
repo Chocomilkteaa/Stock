@@ -7,6 +7,7 @@ import fetchData from "./api.util";
 describe("fetchData", () => {
   afterEach(() => {
     vi.resetAllMocks();
+    vi.restoreAllMocks();
   });
 
   it("should fetch json data", async () => {

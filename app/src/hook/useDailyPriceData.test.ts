@@ -25,6 +25,7 @@ vi.mock("../util/parseDailyPricesFromTpex", () => ({
 describe("useDailyPriceData", () => {
   afterEach(() => {
     vi.resetAllMocks();
+    vi.restoreAllMocks();
   });
 
   it("should initialize with default values", () => {
