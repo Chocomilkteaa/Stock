@@ -115,4 +115,30 @@ describe("parseDailyPricesFromTpex", () => {
       parseDailyPricesFromTpex("invalid data", "mock title"),
     ).toThrow("TPEX API error: No data available");
   });
+
+  it("should throw if TWSE target fields are missing", () => {
+    const originalTwseFields = [...TwseDailyPriceTargetFields];
+    TwseDailyPriceTargetFields.length = 0;
+
+    try {
+      const mockData = {
+        stat: "ok",
+        tables: [
+          {
+            title: "mock title",
+            fields: DailyPriceTargetFields.concat(["field1", "field2"]),
+            data: [["value1", "<p>value2</p>"]],
+          },
+        ],
+      };
+
+      expect(() => parseDailyPricesFromTpex(mockData, "mock title")).toThrow(
+        "Unexpected TWSE daily price fields: missing 證券代號, 證券名稱, 成交股數, 開盤價, 最高價, 最低價, 收盤價",
+      );
+    } finally {
+      // Restore the original TWSE fields after the test
+      TwseDailyPriceTargetFields.length = 0;
+      TwseDailyPriceTargetFields.push(...originalTwseFields);
+    }
+  });
 });

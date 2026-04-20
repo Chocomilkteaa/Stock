@@ -10,9 +10,16 @@ const DailyPriceTargetFields = [
   "最低",
   "收盤",
 ];
-const DailyPriceTargetFieldMap = Object.fromEntries(
-  DailyPriceTargetFields.map((field, index) => [field, TwseDailyPriceTargetFields[index]]),
-) 
+const DailyPriceTargetFieldMap: Record<string, string> = {
+  代號: "證券代號",
+  名稱: "證券名稱",
+  成交股數: "成交股數",
+  開盤: "開盤價",
+  最高: "最高價",
+  最低: "最低價",
+  收盤: "收盤價",
+};
+
 
 function getTargetTable(
   data: object,
@@ -89,6 +96,15 @@ function parseDailyPricesFromTpex(
   data: unknown,
   targetTableTitle: string = DailyPriceTableTitle,
 ): Array<Record<string, string>> {
+  const missingTwseFields = Object.values(DailyPriceTargetFieldMap).filter(
+    (field) => !TwseDailyPriceTargetFields.includes(field),
+  );
+  if (missingTwseFields.length > 0) {
+    throw new Error(
+      `Unexpected TWSE daily price fields: missing ${missingTwseFields.join(", ")}`,
+    );
+  }
+  
   try {
     if (!data || typeof data !== "object") throw new Error("No data available");
 
