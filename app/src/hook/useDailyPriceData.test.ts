@@ -129,4 +129,43 @@ describe("useDailyPriceData", () => {
 
     expect(clickSpy).toHaveBeenCalled();
   });
+
+  it("should handle errors when parsing data for download fails", () => {
+    const { result } = renderHook(() => useDailyPriceData());
+
+    act(() => {
+      result.current.setDailyPriceData("invalid json");
+    });
+    act(() => {
+      result.current.downloadDailyPriceData();
+    });
+
+    expect(result.current.error).toBe("Failed to parse data for download");
+  });
+
+  it("should handle errors when there is no data for download", () => {
+    const { result } = renderHook(() => useDailyPriceData());
+
+    act(() => {
+      result.current.setDailyPriceData(JSON.stringify([], null, 2));
+    });
+    act(() => {
+      result.current.downloadDailyPriceData();
+    });
+
+    expect(result.current.error).toBe("No data available for download");
+  });
+
+  it("should handle errors when data format for download is invalid", () => {
+    const { result } = renderHook(() => useDailyPriceData());
+
+    act(() => {
+      result.current.setDailyPriceData(JSON.stringify(["invalid format"], null, 2));
+    });
+    act(() => {
+      result.current.downloadDailyPriceData();
+    });
+
+    expect(result.current.error).toBe("Invalid data format for download");
+  });
 });

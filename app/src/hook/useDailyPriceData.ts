@@ -50,11 +50,35 @@ function useDailyPriceData() {
     }
 
     const downloadDailyPriceData = async () => {
+        const parseData = (data: string) => {
+            try {
+                return JSON.parse(data);
+            } catch {
+
+                return null;
+            }
+        }
+
         if (!dailyPriceData) return;
 
-        const parsedData = JSON.parse(dailyPriceData);
+        const parsedData = parseData(dailyPriceData);
+        if (parsedData === null) {
+            setError("Failed to parse data for download");
+            return;
+        }
 
-        const headers = Object.keys(parsedData[0]);
+        if (!Array.isArray(parsedData) || parsedData.length === 0) {
+            setError("No data available for download");
+            return;
+        }
+
+        const firstRow = parsedData[0];
+        if (typeof firstRow !== "object" || firstRow === null || Array.isArray(firstRow)) {
+            setError("Invalid data format for download");
+            return;
+        }
+
+        const headers = Object.keys(firstRow);
         const headerRow = headers.join(",") + "\n";
         const dataRows = parsedData.map((row: Record<string, string>) =>
             headers.map((header) => row[header]).join(",")
