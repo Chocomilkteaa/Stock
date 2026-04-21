@@ -21,7 +21,7 @@ describe("fetchMonthlyRevenueFromTwse", () => {
 
         const result = await fetchMonthlyRevenueFromTwse("2024-01-01");
 
-        expect(fetchData).toHaveBeenCalledExactlyOnceWith(`https://mops.twse.com.tw/nas/t21/sii/t21sc03_113_1_0.html`, 'text');
+        expect(fetchData).toHaveBeenCalledExactlyOnceWith(`https://mopsov.twse.com.tw/nas/t21/sii/t21sc03_113_1.csv`, 'text');
         expect(result).toEqual(mockText);
     });
 
@@ -40,7 +40,7 @@ describe("fetchMonthlyRevenueFromTwse", () => {
 
         const result = await fetchMonthlyRevenueFromTwse("2024-01-01", "otc");
 
-        expect(fetchData).toHaveBeenCalledExactlyOnceWith(`https://mops.twse.com.tw/nas/t21/otc/t21sc03_113_1_0.html`, 'text');
+        expect(fetchData).toHaveBeenCalledExactlyOnceWith(`https://mopsov.twse.com.tw/nas/t21/otc/t21sc03_113_1.csv`, 'text');
         expect(result).toEqual(mockText);
     });
 

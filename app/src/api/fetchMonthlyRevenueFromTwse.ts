@@ -9,7 +9,7 @@ async function fetchMonthlyRevenueFromTwse(
     const [year, month] = date.split("-");
     const rocYear = (parseInt(year) - ROC_YEAR_OFFSET).toString();
     const formattedMonth = parseInt(month).toString();
-    const url = `https://mops.twse.com.tw/nas/t21/${type}/t21sc03_${rocYear}_${formattedMonth}_0.html`;
+    const url = `https://mopsov.twse.com.tw/nas/t21/${type}/t21sc03_${rocYear}_${formattedMonth}.csv`;
 
     try {
         return await fetchData(url, "text");
