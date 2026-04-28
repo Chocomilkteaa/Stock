@@ -1,5 +1,4 @@
 import type dayjs from "dayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import {
   Alert,
   Button,
@@ -9,30 +8,41 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { DataTypeLabelMap, type DataType } from "../constants";
+import DataQueryBlock from "./DataQueryBlock";
 
 interface DataDisplayBlockProps {
   title: string;
+
+  selectedDataType: DataType;
+  onChangeDataType: (newValue: DataType) => void;
+
   selectedDate: dayjs.Dayjs;
-  handleChangeDate: (newValue: dayjs.Dayjs | null) => void;
+  onChangeDate: (newValue: dayjs.Dayjs | null) => void;
+
+  isLoading: boolean;
+  isCompleted: boolean;
+
   data: string;
-  loading: boolean;
   error: string | null;
   successMessage: string;
-  isCompleted: boolean;
   noDataMessage: string;
+
   fetchData: () => void;
   downloadData: () => void;
 }
 
 function DataDisplayBlock({
   title,
+  selectedDataType,
+  onChangeDataType,
   selectedDate,
-  handleChangeDate,
+  onChangeDate,
+  isCompleted,
+  isLoading,
   data,
-  loading,
   error,
   successMessage,
-  isCompleted,
   noDataMessage,
   fetchData,
   downloadData,
@@ -65,22 +75,14 @@ function DataDisplayBlock({
             justifyContent="space-between"
           >
             <Typography variant="h6">{title}</Typography>
-            <Stack direction="row" spacing={2} alignItems="center">
-              <DatePicker
-                label="Select Date"
-                value={selectedDate}
-                onChange={handleChangeDate}
-                disabled={loading}
-                disableFuture
-              />
-              <Button
-                onClick={fetchData}
-                loading={loading}
-                variant="contained"
-              >
-                Fetch Data
-              </Button>
-            </Stack>
+            <DataQueryBlock
+              selectedDataType={selectedDataType}
+              onChangeDataType={onChangeDataType}
+              selectedDate={selectedDate}
+              onChangeDate={onChangeDate}
+              isLoading={isLoading}
+              fetchData={fetchData}
+            />
           </Stack>
         </CardContent>
       </Card>
@@ -100,14 +102,14 @@ function DataDisplayBlock({
             justifyContent="center"
           >
             <Typography variant="h6">
-              Daily Price Data for {selectedDate.format("YYYY-MM-DD")}
+              {`${DataTypeLabelMap[selectedDataType]} (${selectedDate.format("YYYY-MM-DD")})`}
             </Typography>
             <Button
               onClick={downloadData}
-              disabled={loading}
+              disabled={isLoading}
               variant="outlined"
             >
-              Download Data
+              下載資料
             </Button>
           </Stack>
 
