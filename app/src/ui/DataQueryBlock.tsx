@@ -1,5 +1,5 @@
 import type dayjs from "dayjs";
-import { DATA_TYPE_TO_DATE_TYPE_MAP, DATA_TYPES, DATE_TYPES, type DataType, type DateType } from "../constants";
+import { DATA_TYPE_TO_DATE_TYPE_MAP, DATA_TYPES, DATE_TYPES, DataTypeLabelMap, type DataType, type DateType } from "../constants";
 import Stack from "@mui/material/Stack";
 import type { SelectChangeEvent } from "@mui/material/Select";
 import { Button, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
@@ -17,11 +17,6 @@ interface DataQueryBlockProps {
 
     fetchData: () => void;
 }
-
-const DataTypeLabelMap: Record<DataType, string> = {
-    [DATA_TYPES.DAILY_PRICE]: "日價格",
-    [DATA_TYPES.MONTHLY_REVENUE]: "月營收",
-} as const;
 
 const DateTypeToViewAndLabelMap: Record<DateType, { views: DateView[]; label: string }> = {
     [DATE_TYPES.DAILY]: { views: ["year", "month", "day"], label: "選擇日期" },
