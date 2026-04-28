@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { logRoles, render, screen } from "@testing-library/react";
+import {  render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import dayjs from "dayjs";
 import DataQueryBlock from "./DataQueryBlock";
@@ -12,7 +12,8 @@ describe("DataQueryBlock", () => {
     const setup = (props?: Partial<React.ComponentProps<typeof DataQueryBlock>>) => {
         const onChangeDataType = vi.fn();
         const onChangeDate = vi.fn();
-        const { container } = render(
+        const fetchData = vi.fn();
+        render(
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DataQueryBlock
                     selectedDataType={DATA_TYPES.DAILY_PRICE}
@@ -20,13 +21,13 @@ describe("DataQueryBlock", () => {
                     selectedDate={defaultDate}
                     onChangeDate={onChangeDate}
                     isLoading={false}
+                    fetchData={fetchData}
                     {...props}
                 />
             </LocalizationProvider>
         );
-        logRoles(container);
 
-        return { onChangeDataType, onChangeDate };
+        return { onChangeDataType, onChangeDate, fetchData };
     };
 
     it("renders data type selector and date picker", () => {
@@ -34,6 +35,7 @@ describe("DataQueryBlock", () => {
 
         expect(screen.getByRole("combobox", { name: /資料類型/u })).toBeInTheDocument();
         expect(screen.getByRole("group", { name: /選擇日期/u })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /查詢/u })).toBeInTheDocument();
     });
 
     it("shows correct label for daily price data type", () => {
@@ -70,6 +72,15 @@ describe("DataQueryBlock", () => {
         expect(onChangeDate).toHaveBeenCalled();
     });
 
+    it("calls fetchData when fetch button is clicked", async () => {
+        const { fetchData } = setup();
+        const user = userEvent.setup();
+        const fetchButton = screen.getByRole("button", { name: /查詢/u });
+        await user.click(fetchButton);
+
+        expect(fetchData).toHaveBeenCalled();
+    });
+
     it("disables controls when loading", () => {
         setup({ isLoading: true });
 
@@ -79,5 +90,8 @@ describe("DataQueryBlock", () => {
         // For MUI DatePicker
         const dateInput = screen.getByRole("group", { name: /選擇日期/u });
         expect(dateInput).toHaveClass('Mui-disabled');
+        // For MUI Button
+        const fetchButton = screen.getByRole("button", { name: /查詢/u });
+        expect(fetchButton).toBeDisabled();
     });
 });

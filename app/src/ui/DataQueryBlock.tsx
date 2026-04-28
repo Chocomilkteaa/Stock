@@ -2,7 +2,7 @@ import type dayjs from "dayjs";
 import { DATA_TYPE_TO_DATE_TYPE_MAP, DATA_TYPES, DATE_TYPES, type DataType, type DateType } from "../constants";
 import Stack from "@mui/material/Stack";
 import type { SelectChangeEvent } from "@mui/material/Select";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Button, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import type { DateView } from "@mui/x-date-pickers/models";
 
@@ -14,6 +14,8 @@ interface DataQueryBlockProps {
     onChangeDate: (newValue: dayjs.Dayjs | null) => void;
 
     isLoading: boolean;
+
+    fetchData: () => void;
 }
 
 const DataTypeLabelMap: Record<DataType, string> = {
@@ -32,6 +34,7 @@ function DataQueryBlock({
     selectedDate,
     onChangeDate,
     isLoading,
+    fetchData,
 }: DataQueryBlockProps) {
     const currentDateType = DATA_TYPE_TO_DATE_TYPE_MAP[selectedDataType];
 
@@ -76,6 +79,14 @@ function DataQueryBlock({
                 views={views}
                 sx={{ flex: 1 }}
             />
+
+            <Button
+                onClick={fetchData}
+                disabled={isLoading}
+                variant="contained"
+            >
+                查詢
+            </Button>
         </Stack>
     )
 }
