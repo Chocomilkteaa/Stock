@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
-import type { DailyPriceBlockProps } from "./DailyPriceBlock";
+import type { DailyPriceBlockProps } from "./DataDisplayBlock";
 import { describe, expect, it, vi } from "vitest";
-import DailyPriceBlock from "./DailyPriceBlock";
+import DailyPriceBlock from "./DataDisplayBlock";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 

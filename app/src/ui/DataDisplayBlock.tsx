@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 
-interface DailyPriceBlockProps {
+interface DataDisplayBlockProps {
   title: string;
   selectedDate: dayjs.Dayjs;
   handleChangeDate: (newValue: dayjs.Dayjs | null) => void;
@@ -26,7 +26,7 @@ interface DailyPriceBlockProps {
   downloadData: () => void;
 }
 
-function DailyPriceBlock({
+function DataDisplayBlock({
   title,
   selectedDate,
   handleChangeDate,
@@ -38,7 +38,7 @@ function DailyPriceBlock({
   noDataMessage,
   fetchData,
   downloadData,
-}: DailyPriceBlockProps) {
+}: DataDisplayBlockProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Container
@@ -126,6 +126,6 @@ function DailyPriceBlock({
   );
 }
 
-export default DailyPriceBlock;
+export default DataDisplayBlock;
 
-export type { DailyPriceBlockProps };
+export type { DataDisplayBlockProps };

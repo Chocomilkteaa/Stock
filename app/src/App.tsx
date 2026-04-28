@@ -1,5 +1,5 @@
 import useDailyPriceData from "./hook/useDailyPriceData";
-import DailyPriceBlock from "./ui/DailyPriceBlock";
+import DataDisplayBlock from "./ui/DataDisplayBlock";
 
 function App() {
   const {
@@ -14,7 +14,7 @@ function App() {
   } = useDailyPriceData();
 
   return (
-    <DailyPriceBlock
+    <DataDisplayBlock
       title="SII + OTC Daily Price Data"
       selectedDate={selectedDate}
       handleChangeDate={handleChangeDate}
