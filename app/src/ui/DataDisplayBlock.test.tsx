@@ -1,12 +1,14 @@
 import dayjs from "dayjs";
-import type { DailyPriceBlockProps } from "./DataDisplayBlock";
+import type { DataDisplayBlockProps } from "./DataDisplayBlock";
 import { describe, expect, it, vi } from "vitest";
 import DailyPriceBlock from "./DataDisplayBlock";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
-function setup(props?: Partial<DailyPriceBlockProps>) {
-    const defaultProps: DailyPriceBlockProps = {
+function setup(props?: Partial<DataDisplayBlockProps>) {
+    const defaultProps: DataDisplayBlockProps = {
         title: "test title",
         selectedDate: dayjs(),
         handleChangeDate: vi.fn(),
@@ -21,7 +23,7 @@ function setup(props?: Partial<DailyPriceBlockProps>) {
     };
 
     const mergedProps = { ...defaultProps, ...props };
-    render(<DailyPriceBlock {...mergedProps} />);
+    render(<LocalizationProvider dateAdapter={AdapterDayjs}><DailyPriceBlock {...mergedProps} /></LocalizationProvider>);
 
     return {
         props: mergedProps,
